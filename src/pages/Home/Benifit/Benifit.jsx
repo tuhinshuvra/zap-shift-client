@@ -29,24 +29,30 @@ const benefits = [
 
 const Benefits = () => {
     return (
-        <section className="py-16  mx-auto">
-            <div className="max-w-7xl mx-auto px-4">
-                {/* <div className="text-center mb-12">
+        <div>
+            <hr className="max-w-6xl mx-auto border-t-2 border-dashed border-gray-400 mt-16" />
+
+            <section className="py-16  mx-auto">
+                <div className="max-w-7xl mx-auto px-4">
+                    {/* <div className="text-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold">Our Benefits</h2>
                     <p className="text-gray-600 mt-2">
                         Discover why our customers trust us for their deliveries.
                     </p>
                 </div> */}
 
-                {/* Benefits Cards */}
-                {benefits.map((benefit) => (
-                    <BenefitCard
-                        key={benefit.id}
-                        benefit={benefit}
-                    ></BenefitCard>
-                ))}
-            </div>
-        </section>
+                    {/* Benefits Cards */}
+                    {benefits.map((benefit) => (
+                        <BenefitCard
+                            key={benefit.id}
+                            benefit={benefit}
+                        ></BenefitCard>
+                    ))}
+                </div>
+            </section>
+            <hr className="max-w-6xl mx-auto border-t-2 border-dashed border-gray-400 mb-10" />
+
+        </div>
     );
 };
 export default Benefits
