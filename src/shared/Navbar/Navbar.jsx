@@ -1,12 +1,28 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import ProFastLogo from '../ProfastLogo/ProFastLogo';
+import { AuthContext } from '../../context/AuthContext/AuthContext';
 
 const Navbar = () => {
+    const { createSignOut, loading, user } = AuthContext;
+
+    console.log("Current LoginUser: ", user);
+
     const navItems = <>
         <li><NavLink to="/">Home</NavLink></li>
         <li><NavLink to="/about">About</NavLink></li>
+        <li><NavLink to="/login">Login</NavLink></li>
     </>
+
+    const handSignOut = () => {
+        createSignOut()
+            .then(result => {
+                console.log("handSignOut result : ", result);
+            })
+            .then(error => {
+                console.log("Handle SignOur Error : ", error);
+            })
+    }
 
     return (
         <div className="navbar bg-base-100 shadow-sm">
@@ -22,7 +38,7 @@ const Navbar = () => {
                         {navItems}
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl"><ProFastLogo></ProFastLogo></a>
+                <p className="btn btn-ghost text-xl"><ProFastLogo></ProFastLogo></p>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
@@ -30,7 +46,7 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                <Link onClick={handSignOut} className="btn" to="/">SignOut</Link>
             </div>
         </div>
     );
