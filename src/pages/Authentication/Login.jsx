@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import GoogleLogin from './SocialLogin/GoogleLogin';
 import useAuth from '../../hooks/useAuth';
 import Loader from '../../shared/loader/Loader';
@@ -8,11 +8,13 @@ import Loader from '../../shared/loader/Loader';
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { createLogin, loading } = useAuth();
+    const navigate = useNavigate();
 
     const onSubmit = data => {
         // console.log("Login Data: ", data);
         createLogin(data?.email, data?.password)
             .then(result => {
+                navigate('/');
                 console.log("Login Result: ", result);
             })
             .then(error => {

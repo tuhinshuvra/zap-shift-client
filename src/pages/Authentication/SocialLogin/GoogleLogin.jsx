@@ -9,9 +9,9 @@ const GoogleLogin = () => {
     const handleGoogleSignIn = () => {
         signInWithGoogle()
             .then(result => {
+                navigate('/');
                 console.log(" signInWithGoogle Result", result);
                 // if (result.user) {
-                navigate('/');
                 // }
             })
             .catch(error => {

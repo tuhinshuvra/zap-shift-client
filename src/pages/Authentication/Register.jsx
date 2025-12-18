@@ -1,11 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
 import GoogleLogin from './SocialLogin/GoogleLogin';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+
 
     const { createUser } = useAuth();
     const registerDataSubmit = (data) => {
@@ -13,6 +15,7 @@ const Register = () => {
 
         createUser(data.email, data.password)
             .then(result => {
+                navigate('/')
                 console.log("Create User Result: ", result);
             })
             .catch(error => {

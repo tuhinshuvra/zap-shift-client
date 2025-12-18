@@ -6,7 +6,7 @@ import { useState } from "react";
 function FlyToDistrict({ coords }) {
     const map = useMap();
     if (coords) {
-        map.flyTo(coords, 14, { duration: 1.5 })
+        map.flyTo(coords, 12, { duration: 1.5 })
     }
     return null;
 }
