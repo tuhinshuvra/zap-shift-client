@@ -1,14 +1,16 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
-import { AuthContext } from '../../context/AuthContext/AuthContext';
+import GoogleLogin from './SocialLogin/GoogleLogin';
+import useAuth from '../../hooks/useAuth';
+import Loader from '../../shared/loader/Loader';
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createLogin } = AuthContext
+    const { createLogin, loading } = useAuth();
 
     const onSubmit = data => {
-        console.log("Login Data: ", data);
+        // console.log("Login Data: ", data);
         createLogin(data?.email, data?.password)
             .then(result => {
                 console.log("Login Result: ", result);
@@ -18,11 +20,15 @@ const Login = () => {
             })
     }
 
+    if (loading) {
+        <Loader></Loader>
+    }
+
 
     return (
         <div className=' text-center'>
             <form onSubmit={handleSubmit(onSubmit)} className=''>
-                <h2 className=' text-start text-4xl font-extrabold'>Login</h2>
+                <h2 className=' text-start text-4xl font-extrabold'>Welcome Back</h2>
                 <fieldset className="fieldset">
                     <label className="label">Email</label>
                     <input
@@ -58,10 +64,13 @@ const Login = () => {
                         <Link className="link link-hover">Forgot password?</Link>
                         <Link className="link link-hover  ml-26" to="/register">New User? go Register</Link>
                     </div>
+
+                    <button className="btn btn-success mt-4 text-black">Login</button>
+
+                    <GoogleLogin></GoogleLogin>
+
                 </fieldset>
-                <div className=' text-center'>
-                    <button className="btn btn-neutral mt-4">Login</button>
-                </div>
+
             </form>
         </div>
     );

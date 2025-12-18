@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
 import useAuth from '../../hooks/useAuth';
+import GoogleLogin from './SocialLogin/GoogleLogin';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -51,6 +52,7 @@ const Register = () => {
                 <div className=' text-center'>
                     <button className="btn btn-neutral mt-4">Register</button>
                 </div>
+                <GoogleLogin></GoogleLogin>
             </form>
         </div>
     );

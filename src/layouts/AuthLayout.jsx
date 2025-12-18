@@ -8,9 +8,7 @@ const AuthLayout = () => {
 
     return (
         <div className=" p-12 bg-base-200   max-w-7xl mx-auto">
-            <div className=''>
-                <Link to="/"> <ProFastLogo></ProFastLogo></Link>
-            </div>
+            <ProFastLogo></ProFastLogo>
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className=' flex-1'>
                     <img
