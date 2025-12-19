@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router';
 import ProFastLogo from '../ProfastLogo/ProFastLogo';
 import useAuth from '../../hooks/useAuth';
+import Loader from '../loader/Loader';
 
 const Navbar = () => {
     const { createSignOut, loading, user } = useAuth();
@@ -10,8 +11,11 @@ const Navbar = () => {
 
     const navItems = <>
         <li><NavLink to="/">Home</NavLink></li>
-        {user &&
-            <li><NavLink to="/sendParcel">Send a Parcel</NavLink></li>
+        {
+            user && <>
+                <li><NavLink to="/sendParcel">Send a Parcel</NavLink></li>
+                <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+            </>
         }
         <li><NavLink to="/coverage">Coverage</NavLink></li>
         <li><NavLink to="/about">About Us</NavLink></li>
@@ -25,6 +29,10 @@ const Navbar = () => {
             .then(error => {
                 console.log("Handle SignOur Error : ", error);
             })
+    }
+
+    if (loading) {
+        <Loader></Loader>
     }
 
     return (

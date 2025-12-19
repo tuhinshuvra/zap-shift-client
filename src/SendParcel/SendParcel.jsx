@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Check, X } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import Loader from "../shared/loader/Loader";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const MySwal = withReactContent(Swal);
 
@@ -25,13 +25,15 @@ const generateTrackingID = () => {
         String(now.getSeconds()).padStart(2, '0');
 
     // Random 4-character alphanumeric string
-    const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const randomStr = Math.random().toString(36).substring(2, 7).toUpperCase();
 
     return `${prefix}-${timestamp}-${randomStr}`;
 };
 
 const SendParcel = () => {
     const { user, loading } = useAuth()
+    const axiosSecure = useAxiosSecure();
+
     const { register, handleSubmit, watch, reset } = useForm();
     const serviceCenters = useLoaderData();
     const [parcelData, setParcelData] = useState(null);
@@ -123,8 +125,6 @@ const SendParcel = () => {
                 confirmSave(totalCost);
             }
         });
-
-
     };
 
 
@@ -145,16 +145,22 @@ const SendParcel = () => {
         console.log("Payload : ", payload);
 
         try {
-            await axios.post("/api/parcels", payload);
+            // await axios.post("/api/parcels", payload);
+            axiosSecure.post('/parcels', payload)
+                .then(res => {
+                    console.log("axiosSecure.post : ", res.data);
+                    if (res.data.insertedId) {
+                        // ToDo: here need to do redirect to the payment page.
+                        MySwal.fire('Success', 'Parcel successfully added!', 'success');
+                    }
+                })
             reset();
-            MySwal.fire('Success', 'Parcel successfully added!', 'success');
+
         } catch (error) {
             console.error(error);
-            MySwal.fire('Error', 'Failed to save parcel!', 'error');
+            MySwal.fire('Error', 'Failed to save parcel!', `${error}`);
         }
     };
-
-
 
 
 
