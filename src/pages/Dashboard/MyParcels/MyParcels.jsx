@@ -2,12 +2,13 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../shared/loader/Loader";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 const MyParcels = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
+    const navigate = useNavigate();
 
     const { data: parcels = [], isLoading, refetch } = useQuery({
         queryKey: ["my-parcels", user?.email],
@@ -57,9 +58,9 @@ const MyParcels = () => {
 
     };
 
-    const handlePay = (parcel) => {
-        console.log("Redirect to payment for:", parcel.trackingId);
-        // navigate(`/payment/${parcel._id}`)
+    const handlePay = (id) => {
+        console.log("Redirect to payment for:", id);
+        navigate(`/dashboard/payment/${id}`)
     };
 
     return (
@@ -131,14 +132,14 @@ const MyParcels = () => {
                                     </Link>
 
                                     {parcel.payment_status === "unpaid" && (
-                                        <button
+                                        <Link
                                             onClick={() =>
-                                                handlePay(parcel)
+                                                handlePay(parcel._id)
                                             }
                                             className="btn btn-xs btn-success"
                                         >
                                             Pay
-                                        </button>
+                                        </Link>
                                     )}
 
                                     <button

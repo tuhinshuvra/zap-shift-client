@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import GoogleLogin from './SocialLogin/GoogleLogin';
 import useAuth from '../../hooks/useAuth';
 import Loader from '../../shared/loader/Loader';
@@ -9,17 +9,18 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { createLogin, loading } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location.state?.from || '/';
 
     const onSubmit = data => {
         // console.log("Login Data: ", data);
         createLogin(data?.email, data?.password)
             .then(result => {
-                navigate('/');
+                navigate(from);
                 console.log("Login Result: ", result);
             })
-            .then(error => {
-                console.log("Login Error", error);
-            })
+            .catch(error => console.log("Login Error", error))
     }
 
     if (loading) {
@@ -69,11 +70,11 @@ const Login = () => {
 
                     <button className="btn btn-success mt-4 text-black">Login</button>
 
-                    <GoogleLogin></GoogleLogin>
 
                 </fieldset>
 
             </form>
+            <GoogleLogin></GoogleLogin>
         </div>
     );
 };

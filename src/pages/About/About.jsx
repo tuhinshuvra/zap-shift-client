@@ -2,6 +2,7 @@ import zapshift from '../../assets/big-deliveryman.png';
 import { Link } from "react-router";
 
 const AboutUs = () => {
+
     const services = [
         { title: "Door-to-Door Delivery", description: "We pick up and deliver parcels directly to your doorstep, anywhere in the country." },
         { title: "Nationwide Coverage", description: "From Dhaka to Rangpur, we have service centers across all major cities and districts." },

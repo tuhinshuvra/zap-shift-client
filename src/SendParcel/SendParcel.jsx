@@ -97,7 +97,6 @@ const SendParcel = () => {
             }
         }
 
-
         // Detailed SweetAlert2 modal
         MySwal.fire({
             title: 'Delivery Cost Breakdown',

@@ -1,22 +1,28 @@
 import React from 'react';
 import useAuth from '../../../hooks/useAuth';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import Loader from '../../../shared/loader/Loader';
 
 const GoogleLogin = () => {
-    const { signInWithGoogle } = useAuth();
+    const { signInWithGoogle, loading } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const from = location.state?.from || '/';
 
     const handleGoogleSignIn = () => {
         signInWithGoogle()
             .then(result => {
-                navigate('/');
+                navigate(from);
                 console.log(" signInWithGoogle Result", result);
-                // if (result.user) {
-                // }
             })
             .catch(error => {
                 console.log(" signInWithGoogle Result", error);
             })
+    }
+
+    if (loading) {
+        <Loader></Loader>
     }
 
 
