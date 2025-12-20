@@ -12,7 +12,6 @@ const MySwal = withReactContent(Swal);
 
 
 const generateTrackingID = () => {
-    // Prefix for your courier, e.g., ZS = Zap Shift
     const prefix = "ZS";
 
     // Current timestamp in YYYYMMDDHHMMSS format
@@ -31,12 +30,13 @@ const generateTrackingID = () => {
 };
 
 const SendParcel = () => {
+    const rawServiceCenters = useLoaderData();
+    const serviceCenters = Array.isArray(rawServiceCenters) ? rawServiceCenters : [];
+
     const { user, loading } = useAuth()
     const axiosSecure = useAxiosSecure();
 
     const { register, handleSubmit, watch, reset } = useForm();
-    const serviceCenters = useLoaderData();
-    const [parcelData, setParcelData] = useState(null);
     const [senderCenters, setSenderCenters] = useState([]);
     const [receiverCenters, setReceiverCenters] = useState([]);
 
@@ -44,6 +44,7 @@ const SendParcel = () => {
     const receiverRegion = watch("receiverRegion");
 
     // Populate unique regions
+
     const regions = [...new Set(serviceCenters.map((item) => item.region))];
 
     // Update sender service centers when region changes
@@ -96,7 +97,6 @@ const SendParcel = () => {
             }
         }
 
-        setParcelData(data);
 
         // Detailed SweetAlert2 modal
         MySwal.fire({
@@ -122,19 +122,19 @@ const SendParcel = () => {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                confirmSave(totalCost);
+                confirmSave(data, totalCost);
             }
         });
     };
 
 
     if (loading) {
-        <Loader></Loader>
+        return <Loader></Loader>
     }
 
-    const confirmSave = async (totalCost) => {
+    const confirmSave = async (data, totalCost) => {
         const payload = {
-            ...parcelData,
+            ...data,
             cost: totalCost,
             payment_status: 'unpaid',
             delivery_status: 'not_collected',

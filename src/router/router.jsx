@@ -63,6 +63,5 @@ export const router = createBrowserRouter([
                 Component: MyParcels
             }
         ]
-
     }
 ]);
