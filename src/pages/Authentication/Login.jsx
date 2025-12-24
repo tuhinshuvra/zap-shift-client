@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import GoogleLogin from './SocialLogin/GoogleLogin';
 import useAuth from '../../hooks/useAuth';
 import Loader from '../../shared/loader/Loader';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -29,52 +30,69 @@ const Login = () => {
 
 
     return (
-        <div className=' text-center'>
-            <form onSubmit={handleSubmit(onSubmit)} className=''>
-                <h2 className=' text-start text-4xl font-extrabold'>Welcome Back</h2>
-                <fieldset className="fieldset">
-                    <label className="label">Email</label>
-                    <input
-                        type="email"
-                        {...register('email', {
-                            required: true
-                        })}
-                        className="input"
-                        placeholder="Email" />
-                    {
-                        errors.email?.type === 'required' &&
-                        <p className=' text-red-500 font-bold italic'>Email is required</p>
-                    }
+        <div className="w-full max-w-md mx-auto">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
-                    <label className="label">Password</label>
-                    <input
-                        type="password"
-                        {...register('password', {
-                            required: true,
-                            minLength: 6
-                        })}
-                        className="input" placeholder="Password" />
-                    {
-                        errors.password?.type === 'required' &&
-                        <p className=' text-red-500 font-bold italic'>Password is required</p>
-                    }
-                    {
-                        errors.password?.type === 'minLength' &&
-                        <p className=' text-red-500 font-bold italic'>Password must be 6 character or longer</p>
-                    }
+                <h2 className="text-4xl font-extrabold text-center mb-6">
+                    Welcome Back 👋
+                </h2>
 
-                    <div className=' flex  '>
-                        <Link className="link link-hover">Forgot password?</Link>
-                        <Link className="link link-hover  ml-26" to="/register">New User? go Register</Link>
+                <div>
+                    <label className="label font-semibold">Email</label>
+                    <div className="relative">
+                        <FaEnvelope className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="email"
+                            {...register('email', { required: true })}
+                            className="input input-bordered w-full pl-10"
+                            placeholder="Enter your email"
+                        />
                     </div>
+                    {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">Email is required</p>
+                    )}
+                </div>
 
-                    <button className="btn btn-success mt-4 text-black">Login</button>
+                <div>
+                    <label className="label font-semibold">Password</label>
+                    <div className="relative">
+                        <FaLock className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="password"
+                            {...register('password', {
+                                required: true,
+                                minLength: 6
+                            })}
+                            className="input input-bordered w-full pl-10"
+                            placeholder="Enter your password"
+                        />
+                    </div>
+                    {errors.password?.type === 'required' && (
+                        <p className="text-red-500 text-sm mt-1">Password is required</p>
+                    )}
+                    {errors.password?.type === 'minLength' && (
+                        <p className="text-red-500 text-sm mt-1">
+                            Password must be at least 6 characters
+                        </p>
+                    )}
+                </div>
 
+                <div className="flex justify-between text-sm">
+                    <Link className="link link-hover text-primary">
+                        Forgot password?
+                    </Link>
+                    <Link to="/register" className="link link-hover text-primary font-semibold">
+                        New user? Register
+                    </Link>
+                </div>
 
-                </fieldset>
+                <button className="btn btn-success w-full text-black text-lg mt-2">
+                    Login
+                </button>
 
             </form>
-            <GoogleLogin></GoogleLogin>
+
+            <GoogleLogin />
         </div>
     );
 };

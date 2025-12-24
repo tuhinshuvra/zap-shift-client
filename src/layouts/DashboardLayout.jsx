@@ -1,6 +1,7 @@
 import { Link, Outlet } from "react-router";
 import Navbar from "../shared/Navbar/Navbar";
 import ProFastLogo from "../shared/ProfastLogo/ProFastLogo";
+import { FaHome, FaBoxOpen, FaMoneyCheckAlt, FaMapMarkedAlt, FaUserEdit } from "react-icons/fa";
 
 const DashboardLayout = () => {
     return (
@@ -37,12 +38,44 @@ const DashboardLayout = () => {
                 <div className="drawer-side">
                     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                     <ul className="menu bg-base-200 min-h-full w-80 px-4 font-extrabold italic">
-                        <ProFastLogo></ProFastLogo>
-                        <li><Link>Home</Link></li>
-                        <li><Link to="/dashboard/myParcels">My Parcels</Link></li>
-                        <li><Link> Sidebar Item 3</Link></li>
-                        <li><Link> Sidebar Item 4</Link></li>
+                        <ProFastLogo />
+
+                        <li>
+                            <Link to="/dashboard/profile" className="flex items-center gap-3">
+                                <FaHome className="text-lg text-primary" />
+                                Home
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to="/dashboard/myParcels" className="flex items-center gap-3">
+                                <FaBoxOpen className="text-lg text-primary" />
+                                My Parcels
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to="/dashboard/paymentHistory" className="flex items-center gap-3">
+                                <FaMoneyCheckAlt className="text-lg text-primary" />
+                                Payment History
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to="/dashboard/track" className="flex items-center gap-3">
+                                <FaMapMarkedAlt className="text-lg text-primary" />
+                                Track a Package
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link to="/dashboard/profile" className="flex items-center gap-3">
+                                <FaUserEdit className="text-lg text-primary" />
+                                Update Profile
+                            </Link>
+                        </li>
                     </ul>
+
                 </div>
             </div>
         </div>

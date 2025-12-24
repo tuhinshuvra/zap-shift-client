@@ -1,16 +1,18 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import Loader from '../../../shared/loader/Loader';
 import useAuth from '../../../hooks/useAuth';
+import Swal from 'sweetalert2';
 
 const PaymentForm = () => {
     const { user } = useAuth();
     const stripe = useStripe();
     const elements = useElements();
     const axiosSecure = useAxiosSecure();
+    const navigate = useNavigate();
     const { parcelId } = useParams();
     console.log("Payment Form Parcel ID : ", parcelId);
 
@@ -86,6 +88,32 @@ const PaymentForm = () => {
                 setError('');
                 if (result.paymentIntent.status === 'succeeded') {
                     console.log('Payment Succeeded : ', result);
+                    const transactionId = result.paymentIntent.id;
+                    const paymentData = {
+                        parcelId,
+                        email: user.email,
+                        amount,
+                        transactionId,
+                        paymentMethod: result.paymentIntent.payment_method_types,
+                    }
+
+                    const paymentResult = await axiosSecure.post('/payments', paymentData);
+
+                    if (paymentResult.data.insertedId) {
+                        console.log('Payment Successfully!');
+                        // Show success alert
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            html: `
+                                 <p>Your payment has been completed successfully.</p>
+                                 <p><strong>Transaction ID:</strong> ${transactionId}</p>`,
+                            confirmButtonText: 'Go to My Parcels'
+                        }).then(() => {
+                            navigate('/dashboard/myParcels');
+                        });
+                    }
+
 
                 }
             }

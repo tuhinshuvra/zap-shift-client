@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Check, X } from "lucide-react";
@@ -39,6 +39,7 @@ const SendParcel = () => {
     const { register, handleSubmit, watch, reset } = useForm();
     const [senderCenters, setSenderCenters] = useState([]);
     const [receiverCenters, setReceiverCenters] = useState([]);
+    const navigate = useNavigate();
 
     const senderRegion = watch("senderRegion");
     const receiverRegion = watch("receiverRegion");
@@ -152,6 +153,9 @@ const SendParcel = () => {
                         // ToDo: here need to do redirect to the payment page.
                         MySwal.fire('Success', 'Parcel successfully added!', 'success');
                     }
+                }).then(() => {
+                    // navigate(`payment/${}`);
+                    navigate(`/dashboard/myParcels`);
                 })
             reset();
 
@@ -160,8 +164,6 @@ const SendParcel = () => {
             MySwal.fire('Error', 'Failed to save parcel!', `${error}`);
         }
     };
-
-
 
     return (
         <div className="max-w-5xl mx-auto p-6">

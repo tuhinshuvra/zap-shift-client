@@ -7,7 +7,7 @@ import Loader from '../loader/Loader';
 const Navbar = () => {
     const { createSignOut, loading, user } = useAuth();
 
-    console.log("Current LoginUser Navbar: ", user?.email);
+    console.log("Current LoginUser Navbar: ", user?.email, user?.photoURL);
 
     const navItems = <>
         <li><NavLink to="/">Home</NavLink></li>
@@ -18,6 +18,7 @@ const Navbar = () => {
             </>
         }
         <li><NavLink to="/coverage">Coverage</NavLink></li>
+        <li><NavLink to="/beARider">Be a Rider</NavLink></li>
         <li><NavLink to="/about">About Us</NavLink></li>
     </>
 
@@ -57,8 +58,9 @@ const Navbar = () => {
             </div>
             {user ?
                 <div className=' navbar-end'>
-                    <p className=' font-bold italic text-primary'>{user?.email}</p>
-                    <Link onClick={handSignOut} className="btn ml-2 btn-warning text-blue-900 btn-sm" to="/">SignOut</Link>
+                    <p className=' font-bold italic text-primary'>{user?.displayName ? user?.displayName : user?.email}</p>
+                    <img src={user.photoURL} className=' w-6 border shadow-2xs rounded-4xl mx-1' alt="" />
+                    <Link onClick={handSignOut} className="btn ml-2  btn-warning text-red-600 btn-sm" to="/">SignOut</Link>
                 </div>
                 :
                 <div className="navbar-end">
