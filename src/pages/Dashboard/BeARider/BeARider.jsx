@@ -1,159 +1,208 @@
-import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import useAuth from "../../../hooks/useAuth";
-import agent from '../../../assets/agent-pending.png';
+import agent from "../../../assets/agent-pending.png";
+import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const BeARider = () => {
     const { user } = useAuth();
-    const [serviceCenters, setServiceCenters] = useState([]);
+    const axiosSecure = useAxiosSecure();
+    const serviceCenters = useLoaderData();
 
-    useEffect(() => {
-        fetch("/serviceCenter.json")
-            .then((res) => res.json())
-            .then((data) => setServiceCenters(data))
-            .catch((err) => console.error(err));
-    }, []);
-
-    const [formData, setFormData] = useState({
-        name: user?.displayName || "",
-        email: user?.email || "",
-        age: "",
-        region: "",
-        district: "",
-        phone: "",
-        nid: "",
-        bikeBrand: "",
-        bikeAge: "",
-        bikeRegNo: "",
-        bikeRegRenewDate: "",
-        status: "pending",
+    const { register, handleSubmit, watch, reset, formState: { errors }, } = useForm({
+        defaultValues: {
+            name: user?.displayName || "",
+            email: user?.email || "",
+            status: "pending",
+        },
     });
+
+    const selectedRegion = watch("region");
 
     const regions = [...new Set(serviceCenters.map((c) => c.region))];
     const districts = serviceCenters
-        .filter((c) => c.region === formData.region)
+        .filter((c) => c.region === selectedRegion)
         .map((c) => c.district);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+    const onSubmit = (riderData) => {
+        console.log("Rider Application:", riderData);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Rider Application:", formData);
-        // submit to backend
+        axiosSecure.post('/riders', riderData)
+            .then(res => {
+                if (res.data.insertedId) {
+                    console.log(res);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Application Submitted",
+                        text: "Your rider application is under review.",
+                        confirmButtonColor: "#22c55e",
+                    });
+                }
+            })
+        reset();
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gray-50">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl w-full bg-white shadow-lg rounded-2xl p-6">
-                {/* Left: Form */}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Be a Rider</h2>
 
-                    <input
-                        name="name"
-                        value={formData.name}
-                        readOnly
-                        className="input input-bordered w-full"
-                    />
+                {/* LEFT: FORM */}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
-                    <input
-                        name="email"
-                        value={formData.email}
-                        readOnly
-                        className="input input-bordered w-full"
-                    />
+                    {/* Headings */}
+                    <div>
+                        <h2 className="text-4xl font-bold my-2">Be a Rider</h2>
+                        <p className="text-sm text-gray-500">
+                            Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle.
+                            From personal packages to business shipments — we deliver on time, every time.
+                        </p>
 
-                    <input
-                        name="age"
-                        type="number"
-                        placeholder="Age"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                        <h3 className="text-2xl font-semibold text-gray-700 my-4">
+                            Tell us about yourself
+                        </h3>
+                    </div>
 
-                    <select
-                        name="region"
-                        value={formData.region}
-                        onChange={handleChange}
-                        className="select select-bordered w-full"
-                    >
-                        <option value="">Select Region</option>
-                        {regions.map((r) => (
-                            <option key={r} value={r}>
-                                {r}
-                            </option>
-                        ))}
-                    </select>
+                    {/* Name */}
+                    <div>
+                        <label className="label text-black">Full Name</label>
+                        <input
+                            {...register("name")}
+                            readOnly
+                            className="input input-bordered w-full"
+                        />
+                    </div>
 
-                    <select
-                        name="district"
-                        value={formData.district}
-                        onChange={handleChange}
-                        className="select select-bordered w-full"
-                    >
-                        <option value="">Select District</option>
-                        {districts.map((d) => (
-                            <option key={d} value={d}>
-                                {d}
-                            </option>
-                        ))}
-                    </select>
+                    {/* Email & Age */}
+                    <div className="w-full md:flex md:gap-4">
+                        <div className="w-full">
+                            <label className="label text-black">Email Address</label>
+                            <input
+                                {...register("email")}
+                                readOnly
+                                className="input input-bordered w-full"
+                            />
+                        </div>
 
-                    <input
-                        name="phone"
-                        placeholder="Phone Number"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                        <div className="w-full">
+                            <label className="label text-black">Age</label>
+                            <input
+                                type="number"
+                                {...register("age", { required: "Age is required" })}
+                                className="input input-bordered w-full"
+                            />
+                            {errors.age && (
+                                <p className="text-red-500 text-sm">{errors.age.message}</p>
+                            )}
+                        </div>
+                    </div>
 
-                    <input
-                        name="nid"
-                        placeholder="National ID Number"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                    {/* Region & District */}
+                    <div className="w-full md:flex md:gap-4">
+                        <div className="w-full">
+                            <label className="label text-black">Region</label>
+                            <select
+                                {...register("region", { required: true })}
+                                className="select select-bordered w-full"
+                            >
+                                <option value="">Select Region</option>
+                                {regions.map((r) => (
+                                    <option key={r} value={r}>
+                                        {r}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <input
-                        name="bikeBrand"
-                        placeholder="Bike Brand"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                        <div className="w-full">
+                            <label className="label text-black">District</label>
+                            <select
+                                {...register("district", { required: true })}
+                                className="select select-bordered w-full"
+                            >
+                                <option value="">Select District</option>
+                                {districts.map((d) => (
+                                    <option key={d} value={d}>
+                                        {d}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
 
-                    <input
-                        name="bikeAge"
-                        placeholder="Bike Age (years)"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                    {/* Phone & NID */}
+                    <div className="w-full md:flex md:gap-4">
+                        <div className="w-full">
+                            <label className="label text-black">Phone Number</label>
+                            <input
+                                {...register("phone", { required: true })}
+                                placeholder="01XXXXXXXXX"
+                                className="input input-bordered w-full"
+                            />
+                        </div>
 
-                    <input
-                        name="bikeRegNo"
-                        placeholder="Bike Registration No"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                        <div className="w-full">
+                            <label className="label text-black">National ID Number</label>
+                            <input
+                                {...register("nid", { required: true })}
+                                placeholder="NID Number"
+                                className="input input-bordered w-full"
+                            />
+                        </div>
+                    </div>
 
-                    <input
-                        type="date"
-                        name="bikeRegRenewDate"
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                    {/* Bike Info */}
+                    <div className="w-full md:flex md:gap-4">
+                        <div className="w-full">
+                            <label className="label text-black">Bike Brand</label>
+                            <input
+                                {...register("bikeBrand", { required: true })}
+                                className="input input-bordered w-full"
+                            />
+                        </div>
 
-                    <button className="btn btn-primary w-full">Apply</button>
+                        <div className="w-full">
+                            <label className="label text-black">Bike Age (Years)</label>
+                            <input
+                                {...register("bikeAge", { required: true })}
+                                className="input input-bordered w-full"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Registration */}
+                    <div className="w-full md:flex md:gap-4">
+                        <div className="w-full">
+                            <label className="label text-black">Bike Registration Number</label>
+                            <input
+                                {...register("bikeRegNo", { required: true })}
+                                className="input input-bordered w-full"
+                            />
+                        </div>
+
+                        <div className="w-full">
+                            <label className="label text-black">Registration Renew Date</label>
+                            <input
+                                type="date"
+                                {...register("bikeRegRenewDate", { required: true })}
+                                className="input input-bordered w-full"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Hidden status */}
+                    <input type="hidden" {...register("status")} />
+
+                    <button className="btn bg-green-400 w-full">
+                        Apply as Rider
+                    </button>
                 </form>
 
-                {/* Right: Image */}
+                {/* RIGHT: IMAGE */}
                 <div className="flex items-center justify-center">
-                    <img
-                        src={agent}
-                        alt="Rider"
-                        className="max-w-full h-auto"
-                    />
+                    <img src={agent} alt="Rider Pending" className="max-w-full h-auto" />
                 </div>
+
             </div>
         </div>
     );

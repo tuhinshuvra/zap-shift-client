@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router";
 import Navbar from "../shared/Navbar/Navbar";
 import ProFastLogo from "../shared/ProfastLogo/ProFastLogo";
-import { FaHome, FaBoxOpen, FaMoneyCheckAlt, FaMapMarkedAlt, FaUserEdit } from "react-icons/fa";
+import { FaHome, FaBoxOpen, FaMoneyCheckAlt, FaMapMarkedAlt, FaUserEdit, FaUserCheck, FaUserClock } from "react-icons/fa";
 
 const DashboardLayout = () => {
     return (
@@ -68,6 +68,24 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
+                        <li>
+                            <Link to="/dashboard/riders" className="flex items-center gap-3">
+                                <FaUserCheck className="text-lg text-primary" />
+                                All Riders
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/dashboard/active-riders" className="flex items-center gap-3">
+                                <FaUserCheck className="text-lg text-primary" />
+                                Active Riders
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/dashboard/pending-riders" className="flex items-center gap-3">
+                                <FaUserClock className="text-lg text-primary" />
+                                Pending Riders
+                            </Link>
+                        </li>
                         <li>
                             <Link to="/dashboard/profile" className="flex items-center gap-3">
                                 <FaUserEdit className="text-lg text-primary" />

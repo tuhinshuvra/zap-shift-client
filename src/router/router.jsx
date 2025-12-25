@@ -15,6 +15,9 @@ import PaymentHistory from "../pages/Dashboard/Payment/PaymentHistory/PaymentHis
 import TrackParcel from "../pages/Dashboard/Payment/TrackParcel/TrackParcel";
 import UserProfile from "../pages/UserProfile/UserProfile";
 import BeARider from "../pages/Dashboard/BeARider/BeARider";
+import PendingRiders from "../pages/Dashboard/BeARider/PendingRiders";
+import ActiveRiders from "../pages/Dashboard/BeARider/ActiveRiders";
+import AllRiders from "../pages/Dashboard/BeARider/AllRiders";
 
 
 export const router = createBrowserRouter([
@@ -43,6 +46,7 @@ export const router = createBrowserRouter([
             {
                 path: 'beARider',
                 element: <PrivateRoute> <BeARider></BeARider> </PrivateRoute>,
+                loader: () => fetch('./serviceCenter.json')
             },
         ]
     },
@@ -82,6 +86,18 @@ export const router = createBrowserRouter([
             {
                 path: 'track',
                 Component: TrackParcel
+            },
+            {
+                path: 'riders',
+                Component: AllRiders
+            },
+            {
+                path: 'active-riders',
+                Component: ActiveRiders
+            },
+            {
+                path: 'pending-riders',
+                Component: PendingRiders
             },
             {
                 path: 'profile',
