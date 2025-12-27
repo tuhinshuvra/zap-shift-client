@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router';
 import GoogleLogin from './SocialLogin/GoogleLogin';
@@ -24,9 +23,7 @@ const Login = () => {
             .catch(error => console.log("Login Error", error))
     }
 
-    if (loading) {
-        <Loader></Loader>
-    }
+    if (loading) return <Loader></Loader>
 
 
     return (

@@ -1,6 +1,7 @@
 import zapshift from '../../assets/big-deliveryman.png';
 import { Link } from "react-router";
 
+
 const AboutUs = () => {
 
     const services = [
@@ -12,7 +13,7 @@ const AboutUs = () => {
 
     const team = [
         { name: "Shuvra Rahman", role: "CEO & Founder", image: "https://i.pravatar.cc/150?img=1" },
-        { name: "Sadannda Ram", role: "Operations Head", image: "https://i.pravatar.cc/150?img=2" },
+        { name: "Sadannanda Ram", role: "Operations Head", image: "https://i.pravatar.cc/150?img=2" },
         { name: "Abdur Razzak", role: "Logistics Manager", image: "https://i.pravatar.cc/150?img=3" },
         { name: "Mohammad Karim", role: "Customer Support Lead", image: "https://i.pravatar.cc/150?img=4" },
     ];

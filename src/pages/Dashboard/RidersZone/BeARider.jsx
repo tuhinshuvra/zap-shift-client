@@ -4,21 +4,52 @@ import agent from "../../../assets/agent-pending.png";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useEffect } from "react";
 
 const BeARider = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const serviceCenters = useLoaderData();
 
-    const { register, handleSubmit, watch, reset, formState: { errors }, } = useForm({
+    const { register, handleSubmit, watch, setValue, reset, formState: { errors }, } = useForm({
         defaultValues: {
             name: user?.displayName || "",
             email: user?.email || "",
             status: "pending",
+            age: "",
+            experience: "",
         },
     });
 
+    const dob = watch("dob");
+    const experienceyear = watch("experience");
     const selectedRegion = watch("region");
+
+    useEffect(() => {
+        if (dob) {
+            const age = calculateAge(dob);
+            setValue("age", age, { shouldValidate: true });
+        }
+        if (experienceyear) {
+            setValue("experience", experienceyear);
+        }
+    }, [dob, experienceyear, setValue]);
+
+
+    const calculateAge = (dob) => {
+        const birthDate = new Date(dob);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    };
+
+
 
     const regions = [...new Set(serviceCenters.map((c) => c.region))];
     const districts = serviceCenters
@@ -73,29 +104,82 @@ const BeARider = () => {
                         />
                     </div>
 
-                    {/* Email & Age */}
+
+
+                    {/* DOB & Age */}
                     <div className="w-full md:flex md:gap-4">
+                        {/* Date of Birth */}
                         <div className="w-full">
-                            <label className="label text-black">Email Address</label>
+                            <label className="label text-black">Date of Birth</label>
                             <input
-                                {...register("email")}
-                                readOnly
+                                type="date"
+                                {...register("dob", {
+                                    required: "Date of birth is required",
+                                })}
                                 className="input input-bordered w-full"
                             />
+                            {errors.dob && (
+                                <p className="text-red-500 text-sm">{errors.dob.message}</p>
+                            )}
                         </div>
 
+                        {/* Age (auto calculated) */}
                         <div className="w-full">
                             <label className="label text-black">Age</label>
                             <input
                                 type="number"
-                                {...register("age", { required: "Age is required" })}
-                                className="input input-bordered w-full"
+                                readOnly
+                                {...register("age", {
+                                    required: true,
+                                    min: {
+                                        value: 18,
+                                        message: "You must be at least 18 years old",
+                                    },
+                                })}
+                                className="input input-bordered w-full bg-gray-100"
                             />
                             {errors.age && (
                                 <p className="text-red-500 text-sm">{errors.age.message}</p>
                             )}
                         </div>
                     </div>
+
+
+                    {/* Email & Experience */}
+                    <div className="w-full md:flex md:gap-4">
+                        {/* Email */}
+                        <div className="w-full">
+                            <label className="label text-black">Email Address</label>
+                            <input
+                                {...register("email")}
+                                readOnly
+                                className="input input-bordered w-full bg-gray-100"
+                            />
+                        </div>
+
+                        {/* Experience */}
+                        <div className="w-full">
+                            <label className="label text-black">Experience (Years)</label>
+                            <input
+                                type="number"
+                                {...register("experience", {
+                                    required: "Experience is required",
+                                    min: {
+                                        value: 2,
+                                        message: "Minimum 2 years experience required",
+                                    },
+                                })}
+                                placeholder="e.g. 2"
+                                className="input input-bordered w-full"
+                            />
+                            {errors.experience && (
+                                <p className="text-red-500 text-sm">
+                                    {errors.experience.message}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
 
                     {/* Region & District */}
                     <div className="w-full md:flex md:gap-4">

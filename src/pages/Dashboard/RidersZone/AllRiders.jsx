@@ -94,7 +94,7 @@ const AllRiders = () => {
             <div className="mb-4">
                 <input
                     type="text"
-                    placeholder="Search by name, email or phone"
+                    placeholder="Search by name, email or phone ..."
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     className="input input-bordered w-full md:w-1/3"

@@ -20,10 +20,12 @@ const PendingRiders = () => {
 
     // APPROVE
     const approveMutation = useMutation({
-        mutationFn: async (id) =>
-            axiosSecure.patch(`/riders/status/${id}`, {
-                status: 'approved'
-            }),
+        mutationFn: async ({ id, email }) => {
+            return axiosSecure.patch(`/riders/status/${id}`, {
+                status: "approved",
+                email,
+            });
+        },
         onSuccess: () => {
             Swal.fire("Approved!", "Rider approved successfully.", "success");
             queryClient.invalidateQueries(["pendingRiders"]);
@@ -42,7 +44,8 @@ const PendingRiders = () => {
         },
     });
 
-    const handleApprove = (id) => {
+    const handleApprove = (id, email) => {
+
         Swal.fire({
             title: "Approve this rider?",
             icon: "question",
@@ -50,7 +53,7 @@ const PendingRiders = () => {
             confirmButtonText: "Approve",
         }).then((result) => {
             if (result.isConfirmed) {
-                approveMutation.mutate(id);
+                approveMutation.mutate({ id, email });
             }
         });
     };
@@ -128,7 +131,7 @@ const PendingRiders = () => {
 
                                     {/* APPROVE */}
                                     <button
-                                        onClick={() => handleApprove(rider._id)}
+                                        onClick={() => handleApprove(rider._id, rider.email)}
                                         className="btn btn-xs btn-success"
                                     >
                                         <FaCheck />

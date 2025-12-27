@@ -1,19 +1,27 @@
-import { Link, Outlet } from "react-router";
-import Navbar from "../shared/Navbar/Navbar";
+import { NavLink, Outlet } from "react-router";
 import ProFastLogo from "../shared/ProfastLogo/ProFastLogo";
-import { FaHome, FaBoxOpen, FaMoneyCheckAlt, FaMapMarkedAlt, FaUserEdit, FaUserCheck, FaUserClock } from "react-icons/fa";
+import { FaHome, FaBoxOpen, FaMoneyCheckAlt, FaMapMarkedAlt, FaUserEdit, FaUserCheck, FaUserClock, FaMotorcycle, FaUnity, } from "react-icons/fa";
+import useUserRole from "../hooks/useUserRole";
+import Loader from "../shared/loader/Loader";
 
 const DashboardLayout = () => {
+    const { isAdmin, isUser, isLoading } = useUserRole();
+
+    if (isLoading) return <Loader />;
+
     return (
         <div>
-            {/* <Navbar></Navbar> */}
             <div className="drawer lg:drawer-open">
                 <input id="my-drawer" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content flex flex-col">
                     {/* Navbar */}
                     <div className="navbar bg-base-300 w-full lg:hidden">
-                        <div className="flex-none ">
-                            <label htmlFor="my-drawer" aria-label="open sidebar" className="btn btn-square btn-ghost">
+                        <div className="flex-none">
+                            <label
+                                htmlFor="my-drawer"
+                                aria-label="open sidebar"
+                                className="btn btn-square btn-ghost"
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -32,68 +40,148 @@ const DashboardLayout = () => {
                         <div className="mx-2 flex-1 px-2">Dashboard</div>
                     </div>
 
-                    <Outlet></Outlet>
-
+                    {/* Main content */}
+                    <Outlet />
                 </div>
+
+                {/* Sidebar */}
                 <div className="drawer-side">
-                    <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                    <label
+                        htmlFor="my-drawer"
+                        aria-label="close sidebar"
+                        className="drawer-overlay"
+                    ></label>
+
                     <ul className="menu bg-base-200 min-h-full w-80 px-4 font-extrabold italic">
                         <ProFastLogo />
 
+                        {/* User accessible links */}
                         <li>
-                            <Link to="/dashboard/profile" className="flex items-center gap-3">
+                            <NavLink
+                                to="/dashboard"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                }
+                            >
                                 <FaHome className="text-lg text-primary" />
                                 Home
-                            </Link>
+                            </NavLink>
                         </li>
 
                         <li>
-                            <Link to="/dashboard/myParcels" className="flex items-center gap-3">
+                            <NavLink
+                                to="/dashboard/myParcels"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                }
+                            >
                                 <FaBoxOpen className="text-lg text-primary" />
                                 My Parcels
-                            </Link>
+                            </NavLink>
                         </li>
 
                         <li>
-                            <Link to="/dashboard/paymentHistory" className="flex items-center gap-3">
+                            <NavLink
+                                to="/dashboard/paymentHistory"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                }
+                            >
                                 <FaMoneyCheckAlt className="text-lg text-primary" />
                                 Payment History
-                            </Link>
+                            </NavLink>
                         </li>
 
                         <li>
-                            <Link to="/dashboard/track" className="flex items-center gap-3">
+                            <NavLink
+                                to="/dashboard/track"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                }
+                            >
                                 <FaMapMarkedAlt className="text-lg text-primary" />
                                 Track a Package
-                            </Link>
+                            </NavLink>
                         </li>
 
+                        {/* Admin-only links */}
+                        {isAdmin && (
+                            <>
+                                <li>
+                                    <NavLink
+                                        to="/dashboard/assign-riders"
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                        }
+                                    >
+                                        <FaMotorcycle className="text-lg text-primary" />
+                                        Assign Riders
+                                    </NavLink>
+                                </li>
+
+                                <li>
+                                    <NavLink
+                                        to="/dashboard/riders"
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                        }
+                                    >
+                                        <FaUnity className="text-lg text-primary" />
+                                        All Riders
+                                    </NavLink>
+                                </li>
+
+                                <li>
+                                    <NavLink
+                                        to="/dashboard/active-riders"
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                        }
+                                    >
+                                        <FaUserCheck className="text-lg text-primary" />
+                                        Active Riders
+                                    </NavLink>
+                                </li>
+
+                                <li>
+                                    <NavLink
+                                        to="/dashboard/pending-riders"
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                        }
+                                    >
+                                        <FaUserClock className="text-lg text-primary" />
+                                        Pending Riders
+                                    </NavLink>
+                                </li>
+
+                                <li>
+                                    <NavLink
+                                        to="/dashboard/make-admin"
+                                        className={({ isActive }) =>
+                                            `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                        }
+                                    >
+                                        <FaUserEdit className="text-lg text-primary" />
+                                        Manage Admin
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
+
+                        {/* Profile (all users) */}
                         <li>
-                            <Link to="/dashboard/riders" className="flex items-center gap-3">
-                                <FaUserCheck className="text-lg text-primary" />
-                                All Riders
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard/active-riders" className="flex items-center gap-3">
-                                <FaUserCheck className="text-lg text-primary" />
-                                Active Riders
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard/pending-riders" className="flex items-center gap-3">
-                                <FaUserClock className="text-lg text-primary" />
-                                Pending Riders
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard/profile" className="flex items-center gap-3">
+                            <NavLink
+                                to="/dashboard/profile"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 ${isActive ? "text-primary font-bold" : ""}`
+                                }
+                            >
                                 <FaUserEdit className="text-lg text-primary" />
                                 Update Profile
-                            </Link>
+                            </NavLink>
                         </li>
                     </ul>
-
                 </div>
             </div>
         </div>
